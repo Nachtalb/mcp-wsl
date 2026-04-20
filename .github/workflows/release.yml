@@ -68,10 +68,61 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
           merge-multiple: true
+
+      - name: Update AUR .SRCINFO checksums
+        env:
+          TAG: ${{ github.ref_name }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          VERSION=${TAG#v}
+
+          b2_amd64=$(b2sum artifacts/mcp-wsl-linux-amd64 | awk '{print $1}')
+          b2_i386=$(b2sum  artifacts/mcp-wsl-linux-i386  | awk '{print $1}')
+          b2_arm64=$(b2sum artifacts/mcp-wsl-linux-arm64 | awk '{print $1}')
+          b2_arm32=$(b2sum artifacts/mcp-wsl-linux-arm32 | awk '{print $1}')
+
+          # Fetch source tarball checksum
+          curl -fsSL "https://github.com/Nachtalb/mcp-wsl/archive/refs/tags/${TAG}.tar.gz" -o /tmp/src.tar.gz
+          b2_src=$(b2sum /tmp/src.tar.gz | awk '{print $1}')
+
+          # Update pkgver in both PKGBUILDs and .SRCINFOs
+          sed -i "s/^pkgver=.*/pkgver=$VERSION/" packaging/aur/mcp-wsl/PKGBUILD
+          sed -i "s/^pkgver=.*/pkgver=$VERSION/" packaging/aur/mcp-wsl-bin/PKGBUILD
+
+          # Update checksums in mcp-wsl (source build)
+          sed -i "s|b2sums=('SKIP')|b2sums=('$b2_src')|" packaging/aur/mcp-wsl/PKGBUILD
+          sed -i "/^	b2sums = SKIP/{s/SKIP/$b2_src/}" packaging/aur/mcp-wsl/.SRCINFO
+          sed -i "s|^	pkgver = .*|	pkgver = $VERSION|" packaging/aur/mcp-wsl/.SRCINFO
+          sed -i "s|/v[0-9][^/]*/mcp-wsl-|/v${VERSION}/mcp-wsl-|g; s|mcp-wsl-[0-9][^.]*\.tar\.gz|mcp-wsl-${VERSION}.tar.gz|g" \
+            packaging/aur/mcp-wsl/.SRCINFO packaging/aur/mcp-wsl/PKGBUILD
+
+          # Update checksums in mcp-wsl-bin (binary)
+          sed -i "s/b2sums_x86_64=('SKIP')/b2sums_x86_64=('$b2_amd64')/" packaging/aur/mcp-wsl-bin/PKGBUILD
+          sed -i "s/b2sums_i686=('SKIP')/b2sums_i686=('$b2_i386')/"       packaging/aur/mcp-wsl-bin/PKGBUILD
+          sed -i "s/b2sums_aarch64=('SKIP')/b2sums_aarch64=('$b2_arm64')/" packaging/aur/mcp-wsl-bin/PKGBUILD
+          sed -i "s/b2sums_armv7h=('SKIP')/b2sums_armv7h=('$b2_arm32')/"  packaging/aur/mcp-wsl-bin/PKGBUILD
+
+          sed -i "s|^	b2sums_x86_64 = SKIP|	b2sums_x86_64 = $b2_amd64|" packaging/aur/mcp-wsl-bin/.SRCINFO
+          sed -i "s|^	b2sums_i686 = SKIP|	b2sums_i686 = $b2_i386|"       packaging/aur/mcp-wsl-bin/.SRCINFO
+          sed -i "s|^	b2sums_aarch64 = SKIP|	b2sums_aarch64 = $b2_arm64|" packaging/aur/mcp-wsl-bin/.SRCINFO
+          sed -i "s|^	b2sums_armv7h = SKIP|	b2sums_armv7h = $b2_arm32|"  packaging/aur/mcp-wsl-bin/.SRCINFO
+          sed -i "s|^	pkgver = .*|	pkgver = $VERSION|" packaging/aur/mcp-wsl-bin/.SRCINFO
+          sed -i "s|/v[0-9][^/]*/mcp-wsl-|/v${VERSION}/mcp-wsl-|g" \
+            packaging/aur/mcp-wsl-bin/.SRCINFO packaging/aur/mcp-wsl-bin/PKGBUILD
+
+      - name: Commit updated AUR files
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packaging/aur/
+          git diff --cached --quiet || git commit -m "chore: update AUR packages to ${{ github.ref_name }}"
+          git push origin HEAD:master
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2

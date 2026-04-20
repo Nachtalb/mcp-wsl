@@ -1,0 +1,18 @@
+pkgbase = mcp-wsl
+	pkgdesc = MCP server exposing Linux system info and command execution over stdio or HTTP
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/Nachtalb/mcp-wsl
+	arch = x86_64
+	arch = i686
+	arch = aarch64
+	arch = armv7h
+	license = LGPL-3.0-only
+	makedepends = rust
+	makedepends = cargo
+	provides = mcp-wsl
+	conflicts = mcp-wsl-bin
+	source = mcp-wsl-0.1.0.tar.gz::https://github.com/Nachtalb/mcp-wsl/archive/refs/tags/v0.1.0.tar.gz
+	b2sums = SKIP
+
+pkgname = mcp-wsl

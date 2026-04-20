@@ -1,0 +1,22 @@
+pkgbase = mcp-wsl-bin
+	pkgdesc = MCP server exposing Linux system info and command execution over stdio or HTTP (pre-built binary)
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/Nachtalb/mcp-wsl
+	arch = x86_64
+	arch = i686
+	arch = aarch64
+	arch = armv7h
+	license = LGPL-3.0-only
+	provides = mcp-wsl
+	conflicts = mcp-wsl
+	source_x86_64 = mcp-wsl-bin-0.1.0-x86_64::https://github.com/Nachtalb/mcp-wsl/releases/download/v0.1.0/mcp-wsl-linux-amd64
+	b2sums_x86_64 = SKIP
+	source_i686 = mcp-wsl-bin-0.1.0-i686::https://github.com/Nachtalb/mcp-wsl/releases/download/v0.1.0/mcp-wsl-linux-i386
+	b2sums_i686 = SKIP
+	source_aarch64 = mcp-wsl-bin-0.1.0-aarch64::https://github.com/Nachtalb/mcp-wsl/releases/download/v0.1.0/mcp-wsl-linux-arm64
+	b2sums_aarch64 = SKIP
+	source_armv7h = mcp-wsl-bin-0.1.0-armv7h::https://github.com/Nachtalb/mcp-wsl/releases/download/v0.1.0/mcp-wsl-linux-arm32
+	b2sums_armv7h = SKIP
+
+pkgname = mcp-wsl-bin

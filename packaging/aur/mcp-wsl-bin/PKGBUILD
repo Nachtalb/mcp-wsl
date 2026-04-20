@@ -1,0 +1,23 @@
+# Maintainer: Nachtalb <na@nachtalb.io>
+pkgname=mcp-wsl-bin
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="MCP server exposing Linux system info and command execution over stdio or HTTP (pre-built binary)"
+arch=('x86_64' 'i686' 'aarch64' 'armv7h')
+url="https://github.com/Nachtalb/mcp-wsl"
+license=('LGPL-3.0-only')
+provides=('mcp-wsl')
+conflicts=('mcp-wsl')
+
+source_x86_64=("$pkgname-$pkgver-x86_64::https://github.com/Nachtalb/mcp-wsl/releases/download/v$pkgver/mcp-wsl-linux-amd64")
+source_i686=("$pkgname-$pkgver-i686::https://github.com/Nachtalb/mcp-wsl/releases/download/v$pkgver/mcp-wsl-linux-i386")
+source_aarch64=("$pkgname-$pkgver-aarch64::https://github.com/Nachtalb/mcp-wsl/releases/download/v$pkgver/mcp-wsl-linux-arm64")
+source_armv7h=("$pkgname-$pkgver-armv7h::https://github.com/Nachtalb/mcp-wsl/releases/download/v$pkgver/mcp-wsl-linux-arm32")
+b2sums_x86_64=('SKIP')
+b2sums_i686=('SKIP')
+b2sums_aarch64=('SKIP')
+b2sums_armv7h=('SKIP')
+
+package() {
+    install -Dm4755 "$srcdir/$pkgname-$pkgver-${CARCH}" "$pkgdir/usr/bin/mcp-wsl"
+}
