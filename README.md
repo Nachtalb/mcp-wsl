@@ -32,9 +32,27 @@ Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP tr
 
 ## Installation
 
-Requires Rust (install via [rustup](https://rustup.rs)).
+### Pre-built binary (recommended)
+
+Auto-detects your architecture and installs the latest release:
+
+```bash
+ARCH=$(uname -m)
+case $ARCH in
+  x86_64)        FILE=mcp-wsl-linux-amd64 ;;
+  i686|i386)     FILE=mcp-wsl-linux-i386  ;;
+  aarch64|arm64) FILE=mcp-wsl-linux-arm64 ;;
+  armv7l)        FILE=mcp-wsl-linux-arm32 ;;
+  *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+esac
+
+curl -fsSL "https://github.com/Nachtalb/mcp-wsl/releases/latest/download/$FILE" -o /tmp/mcp-wsl
+sudo install -o root -m 4755 /tmp/mcp-wsl /usr/local/bin/mcp-wsl
+```
 
 ### From source
+
+Requires Rust (install via [rustup](https://rustup.rs)).
 
 ```bash
 git clone https://github.com/Nachtalb/mcp-wsl
@@ -46,6 +64,8 @@ sudo install -o root -m 4755 target/release/mcp-wsl /usr/local/bin/mcp-wsl
 ```
 
 ### Via cargo install
+
+Requires Rust (install via [rustup](https://rustup.rs)).
 
 ```bash
 cargo install --git https://github.com/Nachtalb/mcp-wsl
