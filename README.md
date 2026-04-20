@@ -6,35 +6,38 @@
 [![AUR bin](https://img.shields.io/aur/version/mcp-wsl-bin)](https://aur.archlinux.org/packages/mcp-wsl-bin)
 [![License](https://img.shields.io/github/license/Nachtalb/mcp-wsl)](LICENSE)
 
-A Rust-based [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that runs inside WSL and exposes system information and command execution capabilities to Windows-side MCP clients such as Claude Desktop.
+A Rust-based [Model Context Protocol](https://modelcontextprotocol.io) (MCP)
+server that runs inside WSL and exposes system information and command execution
+capabilities to Windows-side MCP clients such as Claude Desktop.
 
-Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP transport) modes.
+Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP
+transport) modes.
 
 ## Tools
 
 ### Read tools
 
-| Tool | Description | Parameters |
-|---|---|---|
-| `read:get_system_info` | System information (`uname -a`) | — |
-| `read:get_os_info` | OS distribution info from `/etc/os-release` and variants | — |
-| `read:list_dir` | Directory listing with optional stat fields | `path: str = cwd`<br>`show_permissions: bool = false`<br>`show_size: bool = false`<br>`show_modified: bool = false`<br>`show_hidden: bool = false` |
-| `read:get_mounts` | Mounted filesystems (`/proc/mounts`) | — |
-| `read:get_wsl_config` | Contents of `/etc/wsl.conf` | — |
-| `read:get_disk_usage` | Disk usage for a path (`df -h`) | `path: str = /` |
-| `read:get_env` | Environment variables with optional substring filter | `filter: str` |
-| `read:list_procs` | Running processes with selectable fields and optional filter | `filter: str`<br>`fields: [pid\|user\|cpu\|memory\|virtual_memory\|time\|status\|name\|command] = all` |
-| `read:get_file` | File metadata and optional content (text or hex) for glob-matched files | `glob: str` *(required)*<br>`limit: int`<br>`show_permissions: bool = false`<br>`show_size: bool = false`<br>`show_modified: bool = false`<br>`content: none\|text\|hex = none` |
-| `read:get_package_manager` | Detects available package managers (pacman, apt, dnf, cargo, npm, uv, …) | — |
-| `read:get_shells` | Available shells from `/etc/shells` | — |
-| `read:get_default_shell` | Current user's default shell | — |
+| Tool                       | Description                                                              | Parameters                                                                                                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `read:get_system_info`     | System information (`uname -a`)                                          | —                                                                                                                                                                               |
+| `read:get_os_info`         | OS distribution info from `/etc/os-release` and variants                 | —                                                                                                                                                                               |
+| `read:list_dir`            | Directory listing with optional stat fields                              | `path: str = cwd`<br>`show_permissions: bool = false`<br>`show_size: bool = false`<br>`show_modified: bool = false`<br>`show_hidden: bool = false`                              |
+| `read:get_mounts`          | Mounted filesystems (`/proc/mounts`)                                     | —                                                                                                                                                                               |
+| `read:get_wsl_config`      | Contents of `/etc/wsl.conf`                                              | —                                                                                                                                                                               |
+| `read:get_disk_usage`      | Disk usage for a path (`df -h`)                                          | `path: str = /`                                                                                                                                                                 |
+| `read:get_env`             | Environment variables with optional substring filter                     | `filter: str`                                                                                                                                                                   |
+| `read:list_procs`          | Running processes with selectable fields and optional filter             | `filter: str`<br>`fields: [pid\|user\|cpu\|memory\|virtual_memory\|time\|status\|name\|command] = all`                                                                          |
+| `read:get_file`            | File metadata and optional content (text or hex) for glob-matched files  | `glob: str` _(required)_<br>`limit: int`<br>`show_permissions: bool = false`<br>`show_size: bool = false`<br>`show_modified: bool = false`<br>`content: none\|text\|hex = none` |
+| `read:get_package_manager` | Detects available package managers (pacman, apt, dnf, cargo, npm, uv, …) | —                                                                                                                                                                               |
+| `read:get_shells`          | Available shells from `/etc/shells`                                      | —                                                                                                                                                                               |
+| `read:get_default_shell`   | Current user's default shell                                             | —                                                                                                                                                                               |
 
 ### Exec tools
 
-| Tool | Description | Parameters |
-|---|---|---|
-| `exec:execute_command` | Run a binary with an explicit argument list | `command: str` *(required)*<br>`args: str[]`<br>`user: str`<br>`stdin: str`<br>`stdin_file: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
-| `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command: str` *(required)*<br>`shell: str = $SHELL`<br>`user: str`<br>`stdin: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
+| Tool                         | Description                                                               | Parameters                                                                                                                                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `exec:execute_command`       | Run a binary with an explicit argument list                               | `command: str` _(required)_<br>`args: str[]`<br>`user: str`<br>`stdin: str`<br>`stdin_file: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
+| `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command: str` _(required)_<br>`shell: str = $SHELL`<br>`user: str`<br>`stdin: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str`              |
 
 ## Installation
 
@@ -48,7 +51,8 @@ paru -S mcp-wsl-bin
 paru -S mcp-wsl
 ```
 
-Any AUR helper works (`yay`, `paru`, etc.). Both packages set the setuid bit automatically via pacman.
+Any AUR helper works (`yay`, `paru`, etc.). Both packages set the setuid bit
+automatically via pacman.
 
 ### Pre-built binary (recommended)
 
@@ -93,13 +97,17 @@ sudo chown root:root ~/.cargo/bin/mcp-wsl
 sudo chmod u+s ~/.cargo/bin/mcp-wsl
 ```
 
-The setuid bit is what allows the server to switch to any user when the `user` parameter is passed to exec tools. Without it, `user` still works as long as you request the same user the server is already running as — any other user returns a clear error pointing to the fix.
+The setuid bit is what allows the server to switch to any user when the `user`
+parameter is passed to exec tools. Without it, `user` still works as long as you
+request the same user the server is already running as — any other user returns
+a clear error pointing to the fix.
 
 ## Usage
 
 ### Stdio mode (default)
 
-Used by MCP clients that spawn the server as a subprocess. No flags needed — stdio is the default when no subcommand is given.
+Used by MCP clients that spawn the server as a subprocess. No flags needed —
+stdio is the default when no subcommand is given.
 
 ```bash
 mcp-wsl
@@ -109,7 +117,10 @@ mcp-wsl stdio
 
 ### HTTP mode
 
-Runs an HTTP server implementing the [MCP streamable HTTP transport](https://modelcontextprotocol.io/docs/concepts/transports). Useful for clients that connect over the network or for testing with plain HTTP tools.
+Runs an HTTP server implementing the
+[MCP streamable HTTP transport](https://modelcontextprotocol.io/docs/concepts/transports).
+Useful for clients that connect over the network or for testing with plain HTTP
+tools.
 
 ```bash
 mcp-wsl http                              # binds 127.0.0.1:3000
@@ -122,7 +133,8 @@ Endpoint: `POST /mcp` with `Content-Type: application/json` (JSON-RPC 2.0).
 
 ### Claude Desktop (Windows)
 
-Open **Settings → Developer → Edit Config** and add an entry to your `mcpServers` object:
+Open **Settings → Developer → Edit Config** and add an entry to your
+`mcpServers` object:
 
 ```json
 {
@@ -173,11 +185,14 @@ claude mcp add wsl -- wsl.exe -d Ubuntu -- mcp-wsl stdio
 claude mcp add wsl -- wsl.exe -- /home/youruser/.cargo/bin/mcp-wsl stdio
 ```
 
-The server is added to your local project scope by default. Use `--scope user` to make it available across all projects.
+The server is added to your local project scope by default. Use `--scope user`
+to make it available across all projects.
 
 ## Remote Access via Reverse Proxy
 
-Run `mcp-wsl http` on any Linux host and put it behind a reverse proxy that handles TLS and authentication. mcp-wsl itself does no authentication — delegate that entirely to the proxy layer.
+Run `mcp-wsl http` on any Linux host and put it behind a reverse proxy that
+handles TLS and authentication. mcp-wsl itself does no authentication — delegate
+that entirely to the proxy layer.
 
 ### nginx example with HTTP basic auth
 
@@ -237,11 +252,14 @@ claude mcp add --transport http \
   linux https://mcp.example.com/mcp
 ```
 
-Any other header scheme your proxy requires (API key, bearer token, etc.) works the same way — just change the header name and value.
+Any other header scheme your proxy requires (API key, bearer token, etc.) works
+the same way — just change the header name and value.
 
 ## Testing
 
-`test_server.py` is a standalone Python 3 script (stdlib only) that exercises every tool with and without optional parameters against either transport. It can be run from Windows or Linux.
+`test_server.py` is a standalone Python 3 script (stdlib only) that exercises
+every tool with and without optional parameters against either transport. It can
+be run from Windows or Linux.
 
 ```bash
 # Stdio — spawns the server automatically
@@ -277,4 +295,5 @@ read:get_system_info
 
 ## License
 
-Licensed under the GNU Lesser General Public License v3.0 — see [LICENSE](LICENSE).
+Licensed under the GNU Lesser General Public License v3.0 — see
+[LICENSE](LICENSE).
