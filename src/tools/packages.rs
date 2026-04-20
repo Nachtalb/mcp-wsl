@@ -42,8 +42,8 @@ pub async fn get_package_manager(_args: ToolArgs) -> ToolResult {
     let mut found = Vec::new();
 
     for (name, args) in managers {
-        if let Ok(out) = Command::new(name).args(*args).output().await {
-            if out.status.success() || !out.stdout.is_empty() {
+        if let Ok(out) = Command::new(name).args(*args).output().await
+            && (out.status.success() || !out.stdout.is_empty()) {
                 let version = String::from_utf8_lossy(&out.stdout)
                     .lines()
                     .next()
@@ -51,7 +51,6 @@ pub async fn get_package_manager(_args: ToolArgs) -> ToolResult {
                     .trim()
                     .to_string();
                 found.push(format!("{name}: {version}"));
-            }
         }
     }
 

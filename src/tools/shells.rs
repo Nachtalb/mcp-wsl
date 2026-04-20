@@ -29,10 +29,9 @@ pub async fn get_default_shell(_args: ToolArgs) -> ToolResult {
 
     if out.status.success() {
         let line = String::from_utf8_lossy(&out.stdout);
-        if let Some(shell) = line.trim().split(':').nth(6) {
-            if !shell.is_empty() {
-                return Ok(shell.to_string());
-            }
+        if let Some(shell) = line.trim().split(':').nth(6)
+            && !shell.is_empty() {
+            return Ok(shell.to_string());
         }
     }
 

@@ -40,17 +40,7 @@ async fn handle_post(body: Bytes) -> Response {
     };
 
     if val.is_array() {
-        let responses: Vec<Value> = val
-            .as_array()
-            .unwrap()
-            .iter()
-            .cloned()
-            .map(|req| {
-                // Spawn each in-place; batch items are handled sequentially here for simplicity.
-                // For async we collect futures instead.
-                req
-            })
-            .collect();
+        let responses: Vec<Value> = val.as_array().unwrap().to_vec();
 
         // Process batch asynchronously
         let mut out = Vec::new();

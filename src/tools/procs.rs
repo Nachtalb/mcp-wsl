@@ -102,10 +102,9 @@ fn build_uid_map() -> std::collections::HashMap<u32, String> {
     if let Ok(content) = fs::read_to_string("/etc/passwd") {
         for line in content.lines() {
             let parts: Vec<&str> = line.split(':').collect();
-            if parts.len() >= 3 {
-                if let Ok(uid) = parts[2].parse::<u32>() {
-                    map.insert(uid, parts[0].to_string());
-                }
+            if parts.len() >= 3
+                && let Ok(uid) = parts[2].parse::<u32>() {
+                map.insert(uid, parts[0].to_string());
             }
         }
     }
