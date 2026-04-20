@@ -13,6 +13,6 @@ pkgbase = mcp-wsl
 	provides = mcp-wsl
 	conflicts = mcp-wsl-bin
 	source = mcp-wsl-0.1.0.tar.gz::https://github.com/Nachtalb/mcp-wsl/archive/refs/tags/v0.1.0.tar.gz
-	b2sums = SKIP
+	b2sums = 05f302b73bd336d9bfce20821f88f9adaec4c89ec46e224edd398021324fd73d0db3c967bc14963460540b88c0b617c8d86a1644292631229e7d30b806d30a11
 
 pkgname = mcp-wsl
