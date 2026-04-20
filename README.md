@@ -148,29 +148,6 @@ read:get_system_info
   45 passed
 ```
 
-## Project structure
-
-```
-src/
-  main.rs               CLI — subcommand dispatch (stdio / http)
-  server.rs             rmcp ServerHandler — stdio transport
-  http.rs               Axum HTTP server — streamable HTTP transport
-  tools/
-    mod.rs              Tool registry, dispatch(), tool_list()
-    system.rs           get_system_info, get_os_info
-    files.rs            list_dir, get_file
-    mounts.rs           get_mounts, get_disk_usage
-    config.rs           get_wsl_config
-    env.rs              get_env
-    procs.rs            list_procs
-    shells.rs           get_shells, get_default_shell
-    packages.rs         get_package_manager
-    exec.rs             execute_command, execute_shell_command
-test_server.py          Full test suite (stdio + HTTP, Python stdlib only)
-```
-
-Tool logic lives entirely in `src/tools/` and is shared between both transports — `server.rs` and `http.rs` both call `tools::dispatch()`.
-
 ## License
 
 Licensed under the GNU Lesser General Public License v3.0 — see [LICENSE](LICENSE).
