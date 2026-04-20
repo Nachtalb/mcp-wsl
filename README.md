@@ -1,5 +1,11 @@
 # mcp-wsl
 
+[![CI](https://github.com/Nachtalb/mcp-wsl/actions/workflows/ci.yml/badge.svg)](https://github.com/Nachtalb/mcp-wsl/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Nachtalb/mcp-wsl)](https://github.com/Nachtalb/mcp-wsl/releases/latest)
+[![AUR](https://img.shields.io/aur/version/mcp-wsl)](https://aur.archlinux.org/packages/mcp-wsl)
+[![AUR bin](https://img.shields.io/aur/version/mcp-wsl-bin)](https://aur.archlinux.org/packages/mcp-wsl-bin)
+[![License](https://img.shields.io/github/license/Nachtalb/mcp-wsl)](LICENSE)
+
 A Rust-based [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that runs inside WSL and exposes system information and command execution capabilities to Windows-side MCP clients such as Claude Desktop.
 
 Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP transport) modes.
@@ -31,6 +37,18 @@ Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP tr
 | `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command: str` *(required)*<br>`shell: str = $SHELL`<br>`user: str`<br>`stdin: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
 
 ## Installation
+
+### Arch Linux (AUR)
+
+```bash
+# Pre-built binary (fastest)
+paru -S mcp-wsl-bin
+
+# Build from source
+paru -S mcp-wsl
+```
+
+Any AUR helper works (`yay`, `paru`, etc.). Both packages set the setuid bit automatically via pacman.
 
 ### Pre-built binary (recommended)
 
