@@ -8,27 +8,27 @@ Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP tr
 
 ### Read tools
 
-| Tool | Description |
-|---|---|
-| `read:get_system_info` | System information (`uname -a`) |
-| `read:get_os_info` | OS distribution info from `/etc/os-release` and variants |
-| `read:list_dir` | Directory listing with optional permissions, size, modified time, hidden files |
-| `read:get_mounts` | Mounted filesystems (`/proc/mounts`) |
-| `read:get_wsl_config` | Contents of `/etc/wsl.conf` |
-| `read:get_disk_usage` | Disk usage for a path (`df -h`) |
-| `read:get_env` | Environment variables with optional substring filter |
-| `read:list_procs` | Running processes with selectable fields and optional filter |
-| `read:get_file` | File metadata and optional content (text or hex) for glob-matched files |
-| `read:get_package_manager` | Detects available package managers (pacman, apt, dnf, cargo, npm, uv, …) |
-| `read:get_shells` | Available shells from `/etc/shells` |
-| `read:get_default_shell` | Current user's default shell |
+| Tool | Description | Parameters |
+|---|---|---|
+| `read:get_system_info` | System information (`uname -a`) | — |
+| `read:get_os_info` | OS distribution info from `/etc/os-release` and variants | — |
+| `read:list_dir` | Directory listing with optional stat fields | `path`<br>`show_permissions`<br>`show_size`<br>`show_modified`<br>`show_hidden` |
+| `read:get_mounts` | Mounted filesystems (`/proc/mounts`) | — |
+| `read:get_wsl_config` | Contents of `/etc/wsl.conf` | — |
+| `read:get_disk_usage` | Disk usage for a path (`df -h`) | `path` |
+| `read:get_env` | Environment variables with optional substring filter | `filter` |
+| `read:list_procs` | Running processes with selectable fields and optional filter | `filter`<br>`fields` |
+| `read:get_file` | File metadata and optional content (text or hex) for glob-matched files | `glob` *(required)*<br>`limit`<br>`show_permissions`<br>`show_size`<br>`show_modified`<br>`content` |
+| `read:get_package_manager` | Detects available package managers (pacman, apt, dnf, cargo, npm, uv, …) | — |
+| `read:get_shells` | Available shells from `/etc/shells` | — |
+| `read:get_default_shell` | Current user's default shell | — |
 
 ### Exec tools
 
-| Tool | Description |
-|---|---|
-| `exec:execute_command` | Run a binary with an explicit argument list; optional `user`, stdin text/file, stdout/stderr capture or file redirect, timeout, working directory |
-| `exec:execute_shell_command` | Run a full shell command string (pipes, redirects, builtins); optional `user`, configurable shell, stdin, timeout, working directory |
+| Tool | Description | Parameters |
+|---|---|---|
+| `exec:execute_command` | Run a binary with an explicit argument list | `command` *(required)*<br>`args`<br>`user`<br>`stdin`<br>`stdin_file`<br>`stdout_file`<br>`stderr_file`<br>`timeout_secs`<br>`working_dir` |
+| `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command` *(required)*<br>`shell`<br>`user`<br>`stdin`<br>`stdout_file`<br>`stderr_file`<br>`timeout_secs`<br>`working_dir` |
 
 ## Installation
 
