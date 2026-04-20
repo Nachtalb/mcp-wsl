@@ -26,7 +26,9 @@ pub async fn execute_command(args: ToolArgs) -> ToolResult {
 }
 
 pub async fn execute_shell_command(args: ToolArgs) -> ToolResult {
-    let shell = str_arg(&args, "shell").unwrap_or("/bin/sh").to_string();
+    let shell = str_arg(&args, "shell")
+        .map(String::from)
+        .unwrap_or_else(|| std::env::var("SHELL").unwrap_or_else(|_| "/bin/sh".to_string()));
     let command = str_arg(&args, "command")
         .ok_or("command parameter is required")?
         .to_string();

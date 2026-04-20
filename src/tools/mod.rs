@@ -37,7 +37,7 @@ pub async fn dispatch(name: &str, args: ToolArgs) -> ToolResult {
 }
 
 pub fn tool_list() -> Vec<Tool> {
-    vec![
+    let mut tools = vec![
         tool(
             "read:get_system_info",
             "Returns system information equivalent to `uname -a`",
@@ -68,12 +68,18 @@ pub fn tool_list() -> Vec<Tool> {
             json!({}),
             &[],
         ),
-        tool(
+    ];
+
+    if config::is_wsl() {
+        tools.push(tool(
             "read:get_wsl_config",
-            "Returns the contents of /etc/wsl.conf",
+            "Returns the contents of /etc/wsl.conf (WSL only)",
             json!({}),
             &[],
-        ),
+        ));
+    }
+
+    tools.extend([
         tool(
             "read:get_disk_usage",
             "Returns disk usage for a path, equivalent to `df -h`",
@@ -159,7 +165,7 @@ pub fn tool_list() -> Vec<Tool> {
             "Executes a full shell command string supporting pipes, redirects, and shell builtins.",
             json!({
                 "command": {"type": "string", "description": "Full shell command string"},
-                "shell": {"type": "string", "description": "Shell to use (default: /bin/sh)"},
+                "shell": {"type": "string", "description": "Shell to use (default: $SHELL of the invoking user, fallback /bin/sh)"},
                 "user": {"type": "string", "description": "Run as this user (name or numeric UID). Requires mcp-wsl to be installed with setuid root."},
                 "stdin": {"type": "string", "description": "Text to pass to stdin"},
                 "stdout_file": {"type": "string", "description": "Write stdout to this file instead of returning it"},
@@ -169,7 +175,8 @@ pub fn tool_list() -> Vec<Tool> {
             }),
             &["command"],
         ),
-    ]
+    ]);
+    tools
 }
 
 fn tool(name: &'static str, description: &'static str, properties: Value, required: &[&str]) -> Tool {
