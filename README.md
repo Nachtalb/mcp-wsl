@@ -12,13 +12,13 @@ Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP tr
 |---|---|---|
 | `read:get_system_info` | System information (`uname -a`) | — |
 | `read:get_os_info` | OS distribution info from `/etc/os-release` and variants | — |
-| `read:list_dir` | Directory listing with optional stat fields | `path`<br>`show_permissions`<br>`show_size`<br>`show_modified`<br>`show_hidden` |
+| `read:list_dir` | Directory listing with optional stat fields | `path: str = cwd`<br>`show_permissions: bool = false`<br>`show_size: bool = false`<br>`show_modified: bool = false`<br>`show_hidden: bool = false` |
 | `read:get_mounts` | Mounted filesystems (`/proc/mounts`) | — |
 | `read:get_wsl_config` | Contents of `/etc/wsl.conf` | — |
-| `read:get_disk_usage` | Disk usage for a path (`df -h`) | `path` |
-| `read:get_env` | Environment variables with optional substring filter | `filter` |
-| `read:list_procs` | Running processes with selectable fields and optional filter | `filter`<br>`fields` |
-| `read:get_file` | File metadata and optional content (text or hex) for glob-matched files | `glob` *(required)*<br>`limit`<br>`show_permissions`<br>`show_size`<br>`show_modified`<br>`content` |
+| `read:get_disk_usage` | Disk usage for a path (`df -h`) | `path: str = /` |
+| `read:get_env` | Environment variables with optional substring filter | `filter: str` |
+| `read:list_procs` | Running processes with selectable fields and optional filter | `filter: str`<br>`fields: [pid\|user\|cpu\|memory\|virtual_memory\|time\|status\|name\|command] = all` |
+| `read:get_file` | File metadata and optional content (text or hex) for glob-matched files | `glob: str` *(required)*<br>`limit: int`<br>`show_permissions: bool = false`<br>`show_size: bool = false`<br>`show_modified: bool = false`<br>`content: none\|text\|hex = none` |
 | `read:get_package_manager` | Detects available package managers (pacman, apt, dnf, cargo, npm, uv, …) | — |
 | `read:get_shells` | Available shells from `/etc/shells` | — |
 | `read:get_default_shell` | Current user's default shell | — |
@@ -27,8 +27,8 @@ Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP tr
 
 | Tool | Description | Parameters |
 |---|---|---|
-| `exec:execute_command` | Run a binary with an explicit argument list | `command` *(required)*<br>`args`<br>`user`<br>`stdin`<br>`stdin_file`<br>`stdout_file`<br>`stderr_file`<br>`timeout_secs`<br>`working_dir` |
-| `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command` *(required)*<br>`shell`<br>`user`<br>`stdin`<br>`stdout_file`<br>`stderr_file`<br>`timeout_secs`<br>`working_dir` |
+| `exec:execute_command` | Run a binary with an explicit argument list | `command: str` *(required)*<br>`args: str[]`<br>`user: str`<br>`stdin: str`<br>`stdin_file: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
+| `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command: str` *(required)*<br>`shell: str = /bin/sh`<br>`user: str`<br>`stdin: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
 
 ## Installation
 
@@ -80,10 +80,11 @@ mcp-wsl http --host 0.0.0.0 --port 8080
 
 Endpoint: `POST /mcp` with `Content-Type: application/json` (JSON-RPC 2.0).
 
-## Connecting to Claude Desktop (Windows)
+## MCP Client Setup
 
-Add an entry to your Claude Desktop config file at  
-`%APPDATA%\Claude\claude_desktop_config.json`:
+### Claude Desktop (Windows)
+
+Open **Settings → Developer → Edit Config** and add an entry to your `mcpServers` object:
 
 ```json
 {
@@ -121,6 +122,20 @@ To target a specific WSL distro:
   }
 }
 ```
+
+### Claude Code
+
+```bash
+claude mcp add wsl -- wsl.exe -- mcp-wsl stdio
+
+# Target a specific distro
+claude mcp add wsl -- wsl.exe -d Ubuntu -- mcp-wsl stdio
+
+# Full Linux path if mcp-wsl is not on $PATH
+claude mcp add wsl -- wsl.exe -- /home/youruser/.cargo/bin/mcp-wsl stdio
+```
+
+The server is added to your local project scope by default. Use `--scope user` to make it available across all projects.
 
 ## Testing
 
