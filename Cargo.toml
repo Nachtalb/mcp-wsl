@@ -8,6 +8,7 @@ name = "mcp-wsl"
 path = "src/main.rs"
 
 [dependencies]
+libc = "0.2"
 rmcp = { version = "0.1", features = ["server", "transport-io", "macros"] }
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1", features = ["derive"] }

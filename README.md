@@ -27,25 +27,35 @@ Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP tr
 
 | Tool | Description |
 |---|---|
-| `exec:execute_command` | Run a binary with an explicit argument list; optional stdin text/file, stdout/stderr capture or file redirect, timeout, working directory |
-| `exec:execute_shell_command` | Run a full shell command string (pipes, redirects, builtins); configurable shell, stdin, timeout, working directory |
+| `exec:execute_command` | Run a binary with an explicit argument list; optional `user`, stdin text/file, stdout/stderr capture or file redirect, timeout, working directory |
+| `exec:execute_shell_command` | Run a full shell command string (pipes, redirects, builtins); optional `user`, configurable shell, stdin, timeout, working directory |
 
 ## Installation
 
 Requires Rust (install via [rustup](https://rustup.rs)).
 
+### From source
+
 ```bash
-# Inside WSL
 git clone https://github.com/Nachtalb/mcp-wsl
 cd mcp-wsl
 cargo build --release
+
+# Install with setuid root so exec tools can switch users
+sudo install -o root -m 4755 target/release/mcp-wsl /usr/local/bin/mcp-wsl
 ```
 
-The binary is at `target/release/mcp-wsl`. To install it to your PATH:
+### Via cargo install
 
 ```bash
-cargo install --path .
+cargo install --git https://github.com/Nachtalb/mcp-wsl
+
+# Set setuid root so exec tools can switch users
+sudo chown root:root ~/.cargo/bin/mcp-wsl
+sudo chmod u+s ~/.cargo/bin/mcp-wsl
 ```
+
+The setuid bit is what allows the server to switch to any user when the `user` parameter is passed to exec tools. Without it, `user` still works as long as you request the same user the server is already running as — any other user returns a clear error pointing to the fix.
 
 ## Usage
 

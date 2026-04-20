@@ -144,6 +144,7 @@ pub fn tool_list() -> Vec<Tool> {
             json!({
                 "command": {"type": "string", "description": "Binary name or absolute path"},
                 "args": {"type": "array", "items": {"type": "string"}, "description": "Argument list"},
+                "user": {"type": "string", "description": "Run as this user (name or numeric UID). Requires mcp-wsl to be installed with setuid root."},
                 "stdin": {"type": "string", "description": "Text to pass to stdin"},
                 "stdin_file": {"type": "string", "description": "Path to file whose contents are piped to stdin"},
                 "stdout_file": {"type": "string", "description": "Write stdout to this file instead of returning it"},
@@ -159,6 +160,7 @@ pub fn tool_list() -> Vec<Tool> {
             json!({
                 "command": {"type": "string", "description": "Full shell command string"},
                 "shell": {"type": "string", "description": "Shell to use (default: /bin/sh)"},
+                "user": {"type": "string", "description": "Run as this user (name or numeric UID). Requires mcp-wsl to be installed with setuid root."},
                 "stdin": {"type": "string", "description": "Text to pass to stdin"},
                 "stdout_file": {"type": "string", "description": "Write stdout to this file instead of returning it"},
                 "stderr_file": {"type": "string", "description": "Write stderr to this file instead of returning it"},
