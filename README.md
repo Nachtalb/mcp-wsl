@@ -28,7 +28,7 @@ Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP tr
 | Tool | Description | Parameters |
 |---|---|---|
 | `exec:execute_command` | Run a binary with an explicit argument list | `command: str` *(required)*<br>`args: str[]`<br>`user: str`<br>`stdin: str`<br>`stdin_file: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
-| `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command: str` *(required)*<br>`shell: str = /bin/sh`<br>`user: str`<br>`stdin: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
+| `exec:execute_shell_command` | Run a full shell command string supporting pipes, redirects, and builtins | `command: str` *(required)*<br>`shell: str = $SHELL`<br>`user: str`<br>`stdin: str`<br>`stdout_file: str`<br>`stderr_file: str`<br>`timeout_secs: int = 30`<br>`working_dir: str` |
 
 ## Installation
 
@@ -136,6 +136,70 @@ claude mcp add wsl -- wsl.exe -- /home/youruser/.cargo/bin/mcp-wsl stdio
 ```
 
 The server is added to your local project scope by default. Use `--scope user` to make it available across all projects.
+
+## Remote Access via Reverse Proxy
+
+Run `mcp-wsl http` on any Linux host and put it behind a reverse proxy that handles TLS and authentication. mcp-wsl itself does no authentication — delegate that entirely to the proxy layer.
+
+### nginx example with HTTP basic auth
+
+```bash
+# Create a password entry
+htpasswd -c /etc/nginx/.htpasswd myuser
+```
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name mcp.example.com;
+
+    ssl_certificate     /etc/ssl/certs/mcp.crt;
+    ssl_certificate_key /etc/ssl/private/mcp.key;
+
+    location /mcp {
+        auth_basic "MCP Server";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+
+        proxy_pass         http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header   Host $host;
+        proxy_read_timeout 300s;
+    }
+}
+```
+
+### Connecting clients
+
+Generate the base64 credential once:
+
+```bash
+echo -n "myuser:mypassword" | base64
+```
+
+**Claude Desktop** (`Settings → Developer → Edit Config`):
+
+```json
+{
+  "mcpServers": {
+    "linux": {
+      "url": "https://mcp.example.com/mcp",
+      "headers": {
+        "Authorization": "Basic <base64-credential>"
+      }
+    }
+  }
+}
+```
+
+**Claude Code**:
+
+```bash
+claude mcp add --transport http \
+  --header "Authorization: Basic <base64-credential>" \
+  linux https://mcp.example.com/mcp
+```
+
+Any other header scheme your proxy requires (API key, bearer token, etc.) works the same way — just change the header name and value.
 
 ## Testing
 
