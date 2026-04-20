@@ -13,6 +13,20 @@ capabilities to Windows-side MCP clients such as Claude Desktop.
 Supports both **stdio** (invoked via `wsl.exe`) and **HTTP** (streamable HTTP
 transport) modes.
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=2 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Tools](#tools)
+- [Installation](#installation)
+- [Usage](#usage)
+- [MCP Client Setup](#mcp-client-setup)
+- [Remote Access via Reverse Proxy](#remote-access-via-reverse-proxy)
+- [Testing](#testing)
+- [License](#license)
+
+<!-- /code_chunk_output -->
+
 ## Tools
 
 ### Read tools
